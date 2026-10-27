@@ -1,10 +1,10 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.error("【エラー】Supabaseの環境変数が設定されていません。.env.local を確認してください。");
+const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+export const supabase = url && key ? createClient(url, key) : null;
+export function requireSupabase() {
+  if (!supabase) throw new Error('データベースの接続設定がありません。.env.local を確認してください。');
+  return supabase;
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
